@@ -1,0 +1,4 @@
+.vagrant
+*.log
+.kube
+join_k8s_cluster.bash
