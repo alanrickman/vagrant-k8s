@@ -23,6 +23,10 @@ curl https://docs.projectcalico.org/v3.10/manifests/calico.yaml -O --silent
 sed -i -e "s?192.168.0.0/16?${POD_NETWORK_CIDR}?g" calico.yaml
 kubectl apply -f calico.yaml && rm -f calico.yaml
 
+# Set Node IP and restart kubelet
+echo KUBELET_EXTRA_ARGS=--node-ip=${MASTER_IP_ADDR} > /etc/default/kubelet
+systemctl restart kubelet
+
 # Get command from kubeadm output for joining workers to cluster
-cat /var/log/kubeadm-init.log | grep "kubeadm join" -A1 > /vagrant/join_k8s_cluster.bash
-chmod +x /vagrant/join_k8s_cluster.bash
+cat /var/log/kubeadm-init.log | grep "kubeadm join" -A1 > /vagrant/.scratch/join_k8s_cluster.bash
+chmod +x /vagrant/.scratch/join_k8s_cluster.bash
